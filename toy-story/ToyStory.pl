@@ -1,4 +1,4 @@
-:- discontiguous felicidadSegunTipoDe/3.
+:- discontiguous felicidadSegunTipoDe/3, esRaro/1, juguete/2.
 % Relaciona al dueño con el nombre del juguete y la cantidad de años que lo ha tenido 
 duenio(andy, woody, 8). 
 duenio(sam, jessie, 3).
@@ -23,7 +23,9 @@ esRaro(deAccion(stacyMalibu, [original(sombrero)])).
 % % Dice si una persona es coleccionista 
 esColeccionista(sam).
 
-
+% Agrego para probar:
+juguete(seniorCaraDePapa2, caraDePapa([ original(pieIzquierdo) ])).
+esRaro(caraDePapa([ original(pieIzquierdo) ])).
 
 % 1) a- tematica/2: relaciona a un juguete con su temática. La temática de los cara de papa es caraDePapa.
 % tematica(FJuguete, Tematica).
@@ -195,6 +197,7 @@ puedeJugarCon(Alguien, NombreJuguete):-
   duenio(Alguien, NombreJuguete, _).
 
 puedeJugarCon(Alguien, NombreJuguete):-
+  duenio(Alguien, _, _).
   puedeJugarCon(OtroAlguien, NombreJuguete),
   Alguien \= OtroAlguien,
   puedePrestarleElJugueteAOtro(Alguien, OtroAlguien).
@@ -203,9 +206,33 @@ puedeJugarCon(Alguien, NombreJuguete):-
 puedePrestarleElJugueteAOtro(Alguien, OtroAlguien):-
   cantidadDeJuguetesQueTiene(Alguien, CantidadDeAlguien),
   cantidadDeJuguetesQueTiene(OtroAlguien, CantidadDeOtroAlguien),
-  CantidadDeOtroAlguien < CantidadDeAlguien.
+  CantidadDeOtroAlguien > CantidadDeAlguien.
 
 cantidadDeJuguetesQueTiene(Alguien, CantidadDeJuguetes):-
   duenio(Alguien, _, _),
   findall(NombreJuguete, duenio(Alguien, CantidadDeAlguien, _), LosJuguetes),
   length(LosJuguetes, CantidadDeJuguetes).
+
+
+
+% 7. podriaDonar/3: relaciona a un dueño, una lista de juguetes propios y una 
+% cantidad de felicidad cuando entre todos los juguetes de la lista le
+% generan menos que esa cantidad de felicidad. Debe ser completamente inversible.
+
+podriaDonar(Duenio, SusJuguetes, FelicidadMaxima):-
+  duenio(Duenio, _, _),
+  juguetesDe(Duenio, SusJuguetes),
+  felicidad(Duenio, Felicidad),
+  FelicidadMaxima >= Felicidad.
+
+
+juguetesDe(Duenio, NombresJuguetes) :-
+  duenio(Duenio, _, _),
+  findall(NombreJuguete, duenio(Duenio, NombreJuguete, _), NombresJuguetes).
+
+% 8. Comentar dónde se aprovechó el polimorfismo
+%   - tematica/2
+%   - esDePlasticoJuguete/1
+%   - esCaraDePapaODeAccion/1
+%   - todasPartesOriginales/1
+%   - felicidadSegunTipoDe/3
