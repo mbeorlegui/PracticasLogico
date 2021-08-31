@@ -45,7 +45,7 @@ foreverAlone(Persona, Dia, Horario):-
 % cigarrillos([MarcasDeCigarrillos])
 % bebidas(Tipo, Cantidad) -> Tipo: alcoholica / noAlcoholica
 
-% venta(Persona, fecha(Dia, Mes), [LoQueVendio])
+% venta(Persona, fecha(Dia, Mes), [LoQueVendioEnElDia])
 venta(dodain, fecha(10, 8), [golosinas(1200), cigarrillos([jockey]), golosinas(50)]).
 venta(dodain, fecha(18, 8), [bebidas(alcoholica, 8), bebidas(noAlcoholica, 1), golosinas(10)]).
 venta(martu, fecha(12, 8), [golosinas(1000), cigarrillos([chesterfield, colorado, parisiennes])]).
@@ -56,14 +56,13 @@ vendedor(Persona):- venta(Persona, _, _).
 
 vendedorEsSuertudo(Persona):-
   vendedor(Persona),
-  forall(Dia, hizoUnaVentaImportante(Persona, Dia)).
+  forall(venta(Persona, Dia, _), primeraVentaFueImportante(Persona, Dia)).
+% Para todo dia que vendio esa Persona ->
+% esa Persona hizo una primera venta importante
 
-hizoUnaVentaImportante(Persona, Dia):-
-  venta(Persona, Dia, LoVendido),
-  primeraVentaFueImportante(LoVendido).
-
-primeraVentaFueImportante(LoQueVendio):-
-  nth0(0, LoQueVendio, PrimeraVenta),
+primeraVentaFueImportante(Persona, Dia):-
+  venta(Persona, Dia, LoQueVendioEnElDia),
+  nth0(0, LoQueVendioEnElDia, PrimeraVenta),
   esVentaImportante(PrimeraVenta).
 
 esVentaImportante(golosinas(ValorEnPlata)):-
@@ -73,7 +72,8 @@ esVentaImportante(cigarrillos(CigarrillosVendidos)):-
   length(CigarrillosVendidos, DistintosTiposDeCigarrillo),
   DistintosTiposDeCigarrillo > 2.
 
-
 esVentaImportante(bebidas(alcoholica, _)).
-esVentaImportante(bebidas(_, CantidadVendida)):-
+esVentaImportante(bebidas(noAlcoholica, CantidadVendida)):-
   CantidadVendida > 5.
+
+
