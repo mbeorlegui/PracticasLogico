@@ -128,6 +128,16 @@ puntajeDeMiembro(Casa, PuntajeDeAccion):-
   esDe(Mago, Casa),
   accionesDeMagos(Mago, _, PuntajeDeAccion).
 
+/*
+Esta funcion no anda, hay que arreglarla:
+
+puntajeDeMiembro(Casa, PuntajeDeMiembro):-
+  esDe(Mago, Casa),
+  accionesDeMagos(Mago, _, PuntajeDeAccion),
+  puntosPorPreguntas(Mago, PuntosPorPreguntas),
+  PuntajeDeMiembro is PuntajeDeAccion + PuntosPorPreguntas.
+
+*/
 
 % 2.3 casaGanadora(Casa) -> Saber cuál es la casa ganadora de la copa
 % que se verifica para aquella casa que haya obtenido una cantidad mayor
